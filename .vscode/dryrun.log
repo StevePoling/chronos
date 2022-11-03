@@ -1,7 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-sh: line 1: 11164 Abort trap: 6           /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk '' -find make 2> /dev/null
-
-make: error: sh -c '/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -sdk '' -find make 2> /dev/null' failed with exit code 34304: (null) (errno=No such file or directory)
-
-xcode-select: Failed to locate 'make', requesting installation of command line developer tools.
-
