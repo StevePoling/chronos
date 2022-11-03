@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/steve/Projects/chronos/build",
+  "command": "/usr/bin/clang++ -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -std=gnu++20 -o CMakeFiles/chronos.dir/src/chronos.cpp.o -c /Users/steve/Projects/chronos/src/chronos.cpp",
+  "file": "/Users/steve/Projects/chronos/src/chronos.cpp"
+}
+]
