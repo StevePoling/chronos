@@ -1,2 +1,6 @@
 ttd-git.org
 src/chronos
+src/chronos.dSYM/*
+CMakeCache.txt
+CMakeFiles/*
+build/*
