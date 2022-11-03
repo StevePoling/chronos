@@ -1,0 +1,341 @@
+#include <algorithm>
+#include <array>
+#include <assert.h>
+#include <charconv>
+#include <chrono>
+#include <compare>
+//#include <fmt/format.h>
+#include <iostream>
+#include <iomanip>
+#include <iterator>
+#include <sstream>
+#include <string>
+#include <string_view>
+#include <time.h>
+#include <type_traits>
+#include <tuple>
+#include <vector>
+
+//#if __cplusplus >= ???
+//199711L (C++98 or C++03)
+//201103L (C++11)
+//201402L (C++14)
+//201703L (C++17)
+//clang-1200.0.32.29: 201707L (C++2a)
+//Apple clang version 12.0.5
+//202002L (C++20)
+
+using namespace std::chrono;
+using namespace std::literals;
+using Clock = std::chrono::system_clock;
+using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
+using Duration = std::chrono::seconds;
+using D_Range = std::pair<Duration,Duration>;
+using ActivityList = std::vector<std::tuple<std::string, Duration>>;//, TimePoint, TimePoint>>;
+
+std::string ToString( const TimePoint& time, const std::string& format)
+{
+    std::time_t tt = system_clock::to_time_t(time);
+    std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
+    std::stringstream ss;
+    ss << std::put_time( &tm, format.c_str() );
+    return ss.str();
+}
+
+TimePoint TimeTomorrowAt(int hour, int min)
+{
+  time_t tt = system_clock::to_time_t(system_clock::now());
+  tm local_tm = *localtime(&tt);
+  local_tm.tm_sec = 0;
+  local_tm.tm_min = min;
+  local_tm.tm_hour = hour;
+  local_tm.tm_mday++;
+  local_tm.tm_isdst = -1; // Use DST value from local time zone
+  return std::chrono::system_clock::from_time_t(std::mktime(&local_tm));
+}
+
+TimePoint TimeTodayAt(int hour, int min)
+{
+  time_t tt = system_clock::to_time_t(system_clock::now());
+  tm local_tm = *localtime(&tt);
+  local_tm.tm_sec = 0;
+  local_tm.tm_min = min;
+  local_tm.tm_hour = hour;
+  local_tm.tm_isdst = -1; // Use DST value from local time zone
+  return std::chrono::system_clock::from_time_t(std::mktime(&local_tm));
+}
+
+TimePoint TimeTodayAt(std::string time)
+{
+  //parse str into hour & min
+  int hour{0};
+  int min{0};
+  int sec{0};
+  if (sscanf(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
+  {
+    if (time.ends_with("pm"))
+    {
+      hour += 12;
+    }
+    return TimeTodayAt(hour,min);
+  }
+  return TimeTodayAt(8,0);
+}
+
+TimePoint TimeTomorrowAt(std::string time)
+{
+  //parse str into hour & min
+  int hour{0};
+  int min{0};
+  int sec{0};
+  bool pm{false};
+  if (sscanf(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
+  {
+    return TimeTomorrowAt(hour,min);
+  }
+  return TimeTomorrowAt(8,0);
+}
+
+void ShowPreBedtime(const std::string preface, const TimePoint now, const TimePoint bedtime)
+{  //pre-wake
+  const D_Range plan_tomorrow{ 5min, 5min };
+  const D_Range no_screens{ 30min, 60min };
+  const auto mins1 = std::chrono::duration_cast<std::chrono::minutes> ((bedtime - no_screens.first) - now);
+  std::cout << preface << " Last Screen [ " 
+    << ToString(bedtime - no_screens.second, "%I:%M%p") << " - "
+    << ToString(bedtime - no_screens.first, "%I:%M%p") << " "
+    << "]";
+  const auto mins2 = std::chrono::duration_cast<std::chrono::minutes> ((bedtime - plan_tomorrow.first) - now);
+  std::cout << " Planning [ " 
+    << ToString(bedtime - plan_tomorrow.second, "%I:%M%p") << " - "
+    << ToString(bedtime - plan_tomorrow.first, "%I:%M%p") << " "
+    << "] ("  << mins2.count() << " minutes from now)\n";
+}
+
+void ShowAfterWakeTime(const std::string preface, TimePoint wake)
+{
+  const D_Range meditate_time{ 2min,10min };
+  const D_Range exercize{15min,45min};
+  const D_Range journaling{5min,15min};
+  const auto focused_work = D_Range{ 15min, 60min };
+  const auto first_email_time = 1h;
+
+  auto soonest = wake + meditate_time.first;
+  auto latest = wake + meditate_time.second;
+  std::cout << preface << "\nMeditate\t" 
+    << ToString(soonest, "%I:%M%p") << "\t"
+    << ToString(latest, "%I:%M%p") << "\t"
+    << "\n";   
+  soonest += exercize.first;
+  latest += exercize.second;
+  std::cout << "Exercize\t"
+    << ToString(soonest, "%I:%M%p") << "\t"
+    << ToString(latest, "%I:%M%p") << "\t"
+    << "\n";
+  soonest += journaling.first;
+  latest += journaling.second;
+  std::cout << "Journaling\t"
+    << ToString(soonest, "%I:%M%p") << "\t" 
+    << ToString(latest, "%I:%M%p") << "\t"
+    << "\n";
+  soonest += focused_work.first;
+  latest += focused_work.second;
+  std::cout << "Focused Work\t"
+    << ToString(soonest, "%I:%M%p") << "\t"
+    << ToString(latest, "%I:%M%p") << "\t"
+    << "\n";
+  std::cout << "First Email\t"
+    << ToString(wake+first_email_time, "%I:%M%p") 
+    << "\n\n";
+}
+
+std::string PadRight( std::string msg, size_t length)
+{
+  auto result(msg);
+  while(result.length() < length)
+  {
+    result = result + " ";
+  }
+  return result;
+}
+
+// TimePoint is only meaningful in the context of a clock
+// and there's no "standard" clock
+TimePoint TP_parse(const char* str)
+{
+  struct tm tm{0};
+  strptime(str, "%I:%M%p", &tm);
+  TimePoint result{std::chrono::system_clock::from_time_t(std::mktime(&tm))};
+  //if (result.time_since_epoch() < 0)
+  //{
+  //  std::chrono::time_point<std::chrono::system_clock,Duration>
+  //  result.time_since_epoch() += 1d;
+  //}
+  return result;
+}
+void report_activity_list(const std::string& title, const TimePoint& deadline, const ActivityList& the_list)
+{
+  size_t longest_message{0};
+  std::for_each(the_list.cbegin(), the_list.cend(), 
+    [&](auto& item){ longest_message = std::max(longest_message, std::get<0>(item).length()); });
+
+  Duration total_time{0};
+  std::for_each(the_list.cbegin(), the_list.cend(), 
+    [&](auto& item){ total_time += std::get<1>(item); });
+
+  const auto startline = deadline - total_time;
+
+  std::cout << "------------------------------------------\n";
+  Duration accum{0};
+  for(auto item : the_list)
+  {
+    std::cout << PadRight( std::get<0>(item), longest_message ) << " " << ToString(startline + accum, "%I:%M%p") << "\n";
+    accum += std::get<1>(item);
+  }
+  std::cout << PadRight( title, longest_message ) << " " << ToString(startline + accum, "%I:%M%p") << "\n";
+}
+void report_race(
+  const std::string& name, 
+  const std::string& address, 
+  const TimePoint& race_start, 
+  const ActivityList& race_list)
+{
+  std::cout << "==========================================\n";
+  std::cout << name << "\n";
+  std::cout << address << "\n";
+  report_activity_list("Race Starts"s, race_start, race_list);
+  
+}
+
+int main(int argc,char* argv[])
+{
+  for(int i=0;i<argc;++i)
+  {
+    std::cout << "'" << argv[i] << "'\n";
+  }
+
+  const auto msg{
+    "Spend 5 minutes before you go to bed mapping your top 1-3 priorities for the next day. "
+    "Spend 10 minutes before bed thinking about your #1 goal or #1 problem you’re trying to solve. "
+    "This will prime your subconscious while you sleep. As Thomas Edison has said, 'Never go "
+    "to sleep without a request to your subconscious.' "
+    "Don’t look at any electronic screens 30-60 minutes before going to bed"
+    "Don’t check email/social media within 60 minutes of going to bed> "
+    "Go to bed 7 hours before you intend to wake up"
+    "Wake:::: "
+    "Spend 2-10 minutes in prayer/meditation "
+    "Pull out your journal and write by hand anything that comes to your mind related "
+    "to your #1 goal or #1 problem you’re trying to solve. "
+    "During your journal session, write your big picture vision/goals down "
+    "in bullet point form and in present-tense.  "
+    "Spend 15-45 minutes in intensive physical fitness "
+    "Consume 30 grams of protein. "
+    "Spend 15-60 minutes in focused activity on a big picture goal or passion project "
+    "Don’t check email or social media for at least 60 minutes after waking up "
+    "Take a cold shower. If this shower is immediately following physical fitness, just start with cold. "
+    "Listen to or read uplifting content (you can do this while you exercise if that’s convenient) "
+    "After you’ve spent a few minutes purposefully preparing yourself for HOW YOU INTEND TO BE that day. "
+    "If you have creative endeavors, spend 60-90 minutes in focused activity on a big project. "
+    "If you’re doing creative “Deep Work” immediately upon waking up, try listening to "
+    "instrumental/ambient songs on repeat. "};
+
+  const D_Range sleep_time{ 7h, 8h };
+
+  const auto target_wake_up = TimeTomorrowAt("6:00am");
+  const auto earliest_bedtime = target_wake_up - sleep_time.second;
+  const auto latest_bedtime = target_wake_up - sleep_time.first;
+
+  const auto now = system_clock::now();
+  const auto ideal_bedtime = target_wake_up - 8h;
+  const auto earliest_wake_up = now + sleep_time.first;
+  const auto latest_wake_up = now + sleep_time.second;
+  const auto mins = std::chrono::duration_cast<std::chrono::minutes> (ideal_bedtime - now);
+
+// verify c++20 std::string::starts_with()
+//  std::cout << "C++ version ID " << __cplusplus << "\n";
+//  auto duh{"Hello World"s};
+//  std::cout << "Starts With? " << duh.starts_with("Hello") << "\n";
+//  std::cout << "Ends With? " << duh.ends_with("World") << "\n";
+
+  std::cout << "Target wake: " << ToString(target_wake_up,"%I:%M%p")
+    << " Bedtime: " << ToString(ideal_bedtime, "%I:%M%p")
+    << " ("  << mins.count() << " minutes from now)\n";
+  if (mins.count() < 0)
+  {
+    std::cout << "Set alarm for " << ToString(now + 8h, "%I:%M%p") << "\n";
+  }
+
+  ShowPreBedtime("Early...", now, earliest_bedtime);
+  ShowPreBedtime("LateR...", now, latest_bedtime);
+
+  if (mins.count() > 0)
+  {
+    ShowAfterWakeTime("If I got up when I should...", target_wake_up);
+  }
+  else
+  {
+    ShowAfterWakeTime("If I go to bed now and sleep least...", earliest_wake_up);
+    ShowAfterWakeTime("If I go to bed now and sleep most...", latest_wake_up);
+  }
+
+  //----------------------------------------------------------------------
+  auto race_name = "Riverbank Run";
+  auto race_address = "Corner Ottawa & Lyon Downtown Grand Rapids";
+  auto drive_time = 15min;
+  auto race_start{ TimeTomorrowAt("7:00am"s)};
+  if (argc == 5)
+  {
+    race_name = argv[1];
+    race_address = argv[2];
+    drive_time = std::chrono::minutes(std::atoi(argv[3]));
+    race_start = TimeTomorrowAt(argv[4]);
+  }
+  else
+  {
+    std::cout << "Usage: " << argv[0] << " <race-name> <race-address> <drive-time> <race-start>\n";
+  }
+  //----------------------------------------------------------------------
+  const ActivityList race_list {
+    {"Go to sleep"s, 9h},
+    {"Wake up"s, 5min},
+    {"Shower"s, 20min},
+    {"Make coffee"s, 10min},
+    {"Get dressed"s, 10min},
+    {"Get checklist items"s, 5min},
+    {"Drive to race"s, drive_time},//10min
+    {"Park near race"s, 5min},
+    {"Pick up packet"s, 10min},
+    {"Find Bathroom & Starting Line"s, 20min},
+  };
+  report_race(race_name, race_address, race_start, race_list);
+
+  // const ActivityList church_list {
+  //   {"Go to sleep"s, 9h},
+  //   {"Wake up"s, 5min},
+  //   {"Shower"s, 20min},
+  //   {"Get dressed"s, 10min},
+  //   {"Walk to church", 35min},
+  //   {"Find Pew", 15min},
+  // };
+  // report_activity_list("Church Starts"s, TimeTomorrowAt("11:00am"), church_list);
+
+  // play with various data types
+  // std::array<char, 10> str{"42 xyz "};
+  // int result;
+  // if(auto [p, ec] = std::from_chars(str.data(), str.data()+str.size(), result);
+  //     ec == std::errc())
+  //     std::cout << result << "\n" "p -> \"" << p << "\"\n";
+  // std::string_view sv{"24 abc "};
+  // if(auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result);
+  //     ec == std::errc())
+  //     std::cout << result << "\n" "p -> \"" << p << "\"\n";
+  // double pi = 3.141592;
+  // std::string_view pie = "3.141592";
+  // std::cout << "Pi is " << pi << '\n';
+  // double pi2 = 0;
+  // const auto format = std::chars_format::general;
+  // const auto res = std::from_chars(pie.begin(), pie.end(), pi2, format);
+  // std::cout << "Pi2 is " << pi2 << '\n';
+  // std::cout << "2 pi " << 2.0*pi2 << '\n';
+  return EXIT_SUCCESS;
+}
