@@ -4,3 +4,4 @@ src/chronos.dSYM/*
 CMakeCache.txt
 CMakeFiles/*
 build/*
+build/CTestTestfile.cmake

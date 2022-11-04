@@ -15,6 +15,7 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
+      "miDebuggerPath": "/usr/bin/lldb-vscode-16",
       "preLaunchTask": "clang++ build active file"
     }
   ]
