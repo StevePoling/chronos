@@ -8,7 +8,7 @@
       "name": "Windows Debug Launch",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${fileDirname}/chronos",
+      "program": "${fileDirname}/chronos.exe",
       "args": ["Hot Cider Hustle 5K","1415 Maynard Ave SW, Walker, MI 49534","20min","8:30am"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
@@ -29,8 +29,8 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "miDebuggerPath": "lldb-mi",
-      "preLaunchTask": "cl.exe build active file"
+      "miDebuggerPath": "/usr/bin/lldb-vscode-16",
+      "preLaunchTask": "clang++ build active file"
     }
 
   ]
