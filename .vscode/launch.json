@@ -5,6 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Windows Debug Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/chronos",
+      "args": ["Hot Cider Hustle 5K","1415 Maynard Ave SW, Walker, MI 49534","20min","8:30am"],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "miDebuggerPath": "lldb-mi",
+      "preLaunchTask": "cl.exe build active file"
+    },
+    {
       "name": "(lldb) Launch",
       "type": "cppdbg",
       "request": "launch",
@@ -15,7 +29,9 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "preLaunchTask": "clang++ build active file"
+      "miDebuggerPath": "lldb-mi",
+      "preLaunchTask": "cl.exe build active file"
     }
+
   ]
 }

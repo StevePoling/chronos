@@ -4,3 +4,5 @@ src/chronos.dSYM/*
 CMakeCache.txt
 CMakeFiles/*
 build/*
+src/chronos.ilk
+src/chronos.pdb

@@ -33,10 +33,27 @@ using Duration = std::chrono::seconds;
 using D_Range = std::pair<Duration,Duration>;
 using ActivityList = std::vector<std::tuple<std::string, Duration>>;//, TimePoint, TimePoint>>;
 
+#ifdef _MSC_VER
+
+extern "C" char* strptime(const char* s,
+                          const char* f,
+                          struct tm* tm) {
+  std::istringstream input(s);
+  input.imbue(std::locale(setlocale(LC_ALL, nullptr)));
+  input >> std::get_time(tm, f);
+  if (input.fail()) {
+    return nullptr;
+  }
+  return (char*)(s + input.tellg());
+}
+#endif
+
 std::string ToString( const TimePoint& time, const std::string& format)
 {
-    std::time_t tt = system_clock::to_time_t(time);
-    std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
+    const std::time_t tt = system_clock::to_time_t(time);
+    //std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
+    std::tm tm({0});
+    ::localtime_s(&tm,&tt); //Locale time-zone, usually UTC by default.
     std::stringstream ss;
     ss << std::put_time( &tm, format.c_str() );
     return ss.str();
@@ -44,8 +61,9 @@ std::string ToString( const TimePoint& time, const std::string& format)
 
 TimePoint TimeTomorrowAt(int hour, int min)
 {
-  time_t tt = system_clock::to_time_t(system_clock::now());
-  tm local_tm = *localtime(&tt);
+  const time_t tt = system_clock::to_time_t(system_clock::now());
+  tm local_tm({0});
+  ::localtime_s(&local_tm,&tt);
   local_tm.tm_sec = 0;
   local_tm.tm_min = min;
   local_tm.tm_hour = hour;
@@ -56,8 +74,9 @@ TimePoint TimeTomorrowAt(int hour, int min)
 
 TimePoint TimeTodayAt(int hour, int min)
 {
-  time_t tt = system_clock::to_time_t(system_clock::now());
-  tm local_tm = *localtime(&tt);
+  const time_t tt = system_clock::to_time_t(system_clock::now());
+  tm local_tm({0});
+  ::localtime_s(&local_tm,&tt);
   local_tm.tm_sec = 0;
   local_tm.tm_min = min;
   local_tm.tm_hour = hour;
@@ -71,7 +90,7 @@ TimePoint TimeTodayAt(std::string time)
   int hour{0};
   int min{0};
   int sec{0};
-  if (sscanf(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
+  if (sscanf_s(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
   {
     if (time.ends_with("pm"))
     {
@@ -89,7 +108,7 @@ TimePoint TimeTomorrowAt(std::string time)
   int min{0};
   int sec{0};
   bool pm{false};
-  if (sscanf(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
+  if (sscanf_s(time.c_str(), "%d:%d:%d", &hour, &min, &sec) >= 2)
   {
     return TimeTomorrowAt(hour,min);
   }
