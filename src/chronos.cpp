@@ -46,6 +46,18 @@ extern "C" char* strptime(const char* s,
   }
   return (char*)(s + input.tellg());
 }
+
+#else
+
+void localtime_s(std::tm *t,const std::time_t *tt)
+{
+  t = ::localtime(tt);
+}
+int sscanf_s(const char* in,const char *format,int* h,int* m, int* s) 
+{
+  return sscanf(in,format,h,m,s);
+}
+
 #endif
 
 std::string ToString( const TimePoint& time, const std::string& format)
@@ -53,7 +65,7 @@ std::string ToString( const TimePoint& time, const std::string& format)
     const std::time_t tt = system_clock::to_time_t(time);
     //std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
     std::tm tm({0});
-    ::localtime_s(&tm,&tt); //Locale time-zone, usually UTC by default.
+    localtime_s(&tm,&tt); //Locale time-zone, usually UTC by default.
     std::stringstream ss;
     ss << std::put_time( &tm, format.c_str() );
     return ss.str();
