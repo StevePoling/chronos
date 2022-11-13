@@ -5,33 +5,33 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Windows Debug Launch",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${fileDirname}/chronos.exe",
-      "args": ["Hot Cider Hustle 5K","1415 Maynard Ave SW, Walker, MI 49534","20min","8:30am"],
-      "stopAtEntry": false,
-      "cwd": "${fileDirname}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "lldb",
-      "miDebuggerPath": "lldb-mi",
-      "preLaunchTask": "cl.exe build active file"
-    },
-    {
       "name": "(lldb) Launch",
       "type": "cppdbg",
       "request": "launch",
       "program": "${fileDirname}/chronos",
-      "args": ["Hot Cider Hustle 5K","1415 Maynard Ave SW, Walker, MI 49534","20min","8:30am"],
+      "args": ["Turkey Trot 5K","Van Andel Arena / 130 Fulton Street / Grand Rapids, MI 49503","30min","8:30am"],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "miDebuggerPath": "/usr/bin/lldb-vscode-16",
+      "miDebuggerPath": "/Users/steve/.vscode/extensions/ms-vscode.cpptools-1.12.4-darwin-x64/debugAdapters/lldb-mi/bin/lldb-mi",
       "preLaunchTask": "clang++ build active file"
-    }
+    },
+    {
+      "name": "(gdb) Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}/chronos",
+      "args": ["Turkey Trot 5K","Van Andel Arena / 130 Fulton Street / Grand Rapids, MI 49503","30min","8:30am"],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/local/bin/gdb",
+      "preLaunchTask": "g++ build active file"
+    },
 
   ]
 }

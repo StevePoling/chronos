@@ -4,6 +4,7 @@
 #include <charconv>
 #include <chrono>
 #include <compare>
+#include <cstring>
 //#include <fmt/format.h>
 #include <iostream>
 #include <iomanip>
@@ -51,7 +52,7 @@ extern "C" char* strptime(const char* s,
 
 void localtime_s(std::tm *t,const std::time_t *tt)
 {
-  t = ::localtime(tt);
+  memcpy(t,::localtime(tt),sizeof(std::tm));
 }
 int sscanf_s(const char* in,const char *format,int* h,int* m, int* s) 
 {
@@ -74,14 +75,16 @@ std::string ToString( const TimePoint& time, const std::string& format)
 TimePoint TimeTomorrowAt(int hour, int min)
 {
   const time_t tt = system_clock::to_time_t(system_clock::now());
-  tm local_tm({0});
-  ::localtime_s(&local_tm,&tt);
-  local_tm.tm_sec = 0;
-  local_tm.tm_min = min;
-  local_tm.tm_hour = hour;
-  local_tm.tm_mday++;
-  local_tm.tm_isdst = -1; // Use DST value from local time zone
-  return std::chrono::system_clock::from_time_t(std::mktime(&local_tm));
+
+  //std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
+  std::tm tm({0});
+  ::localtime_s(&tm,&tt);
+  tm.tm_sec = 0;
+  tm.tm_min = min;
+  tm.tm_hour = hour;
+  tm.tm_mday++;
+  tm.tm_isdst = -1; // Use DST value from local time zone
+  return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
 TimePoint TimeTodayAt(int hour, int min)

@@ -6,4 +6,8 @@ CMakeFiles/*
 build/*
 src/chronos.ilk
 src/chronos.pdb
-build/CTestTestfile.cmake
+CMakeUserPresets.json
+CPackConfig.cmake
+CPackSourceConfig.cmake
+DartConfiguration.tcl
+Makefile
