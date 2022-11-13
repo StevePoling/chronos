@@ -11,3 +11,5 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 DartConfiguration.tcl
 Makefile
+Testing/*
+out/*
