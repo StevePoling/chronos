@@ -32,6 +32,5 @@
       "miDebuggerPath": "/usr/bin/gdb",
       "preLaunchTask": "g++ build active file"
     },
-
   ]
 }
