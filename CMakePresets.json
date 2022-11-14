@@ -74,12 +74,12 @@
 	    "configurePreset": "x86-linux g++",
 	    "targets": [ "Debug", "Release" ],
 	    "environment": {
-	    "C_INCLUDE_PATH": "/usr/local/include",
-            "CPLUS_INCLUDE_PATH": "/usr/local/include:/usr/local/include/boost",
-            "CPPFLAGS": "-I/usr/local/include",
-            "LIBRARY_PATH": "/usr/local/lib",
-            "LDFLAGS": "-L/usr/local/lib"
-	}
+	      "C_INCLUDE_PATH": "/usr/local/include",
+        "CPLUS_INCLUDE_PATH": "/usr/local/include:/usr/local/include/boost",
+        "CPPFLAGS": "-I/usr/local/include",
+        "LIBRARY_PATH": "/usr/local/lib",
+        "LDFLAGS": "-L/usr/local/lib"
+	    }
     }
   ]
 }
