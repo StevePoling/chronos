@@ -13,3 +13,6 @@ DartConfiguration.tcl
 Makefile
 Testing/*
 out/*
+CTestTestfile.cmake
+chronos
+cmake_install.cmake

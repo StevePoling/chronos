@@ -45,6 +45,15 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_COMPILER": "/usr/bin/clang++"
       }
+    },
+    {
+      "name": "x86-linux g++",
+      "description": "Linux g++ x86 arch, generators, build type",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
+      }
     }
   ],
   "buildPresets": [
@@ -59,6 +68,18 @@
         "LIBRARY_PATH": "/Users/steve/Projects/boost_1_75_0/stage/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib",
         "LDFLAGS": "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
       }
+    },
+    {
+      "name": "x86-linux g++",
+	    "configurePreset": "x86-linux g++",
+	    "targets": [ "Debug", "Release" ],
+	    "environment": {
+	    "C_INCLUDE_PATH": "/usr/local/include",
+            "CPLUS_INCLUDE_PATH": "/usr/local/include:/usr/local/include/boost",
+            "CPPFLAGS": "-I/usr/local/include",
+            "LIBRARY_PATH": "/usr/local/lib",
+            "LDFLAGS": "-L/usr/local/lib"
+	}
     }
   ]
 }
