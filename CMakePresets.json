@@ -63,10 +63,10 @@
       "targets": [ "Debug", "Release" ],
       "environment": {
         "C_INCLUDE_PATH": "/opt/local/include",
-        "CPLUS_INCLUDE_PATH": "/opt/local/include:/usr/local/Cellar/python@3.9/3.9.1_3/Frameworks/Python.framework/Versions/3.9/include/python3.9:/Users/steve/Projects/boost_1_75_0:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include",
-        "CPPFLAGS": "-I/usr/local/opt/llvm/include -I/usr/local/opt/ruby/include",
-        "LIBRARY_PATH": "/Users/steve/Projects/boost_1_75_0/stage/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib",
-        "LDFLAGS": "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib"
+        "CPLUS_INCLUDE_PATH": "/opt/local/include:/usr/local/Cellar/fmt/9.1.0/include:/usr/local/Cellar/python@3.9/3.9.1_3/Frameworks/Python.framework/Versions/3.9/include/python3.9:/Users/steve/Projects/boost_1_75_0:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include",
+        "CPPFLAGS": "-I/usr/local/opt/llvm/include -I/usr/local/opt/ruby/include -I/usr/local/Cellar/fmt/9.1.0/include",
+        "LIBRARY_PATH": "/Users/steve/Projects/boost_1_75_0/stage/lib:/usr/local/Cellar/fmt/9.1.0/lib:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/lib",
+        "LDFLAGS": "-L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib -L/usr/local/Cellar/fmt/9.1.0/lib"
       }
     },
     {
