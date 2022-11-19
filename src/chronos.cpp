@@ -5,10 +5,10 @@
 #include <chrono>
 #include <compare>
 #include <cstring>
-//#include <fmt/format.h>
 #include <iostream>
 #include <iomanip>
 #include <iterator>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -352,24 +352,29 @@ int main(int argc,char* argv[])
   //   {"Find Pew", 15min},
   // };
   // report_activity_list("Church Starts"s, TimeTomorrowAt("11:00am"), church_list);
-
+#if 0
   // play with various data types
-  // std::array<char, 10> str{"42 xyz "};
-  // int result;
-  // if(auto [p, ec] = std::from_chars(str.data(), str.data()+str.size(), result);
-  //     ec == std::errc())
-  //     std::cout << result << "\n" "p -> \"" << p << "\"\n";
-  // std::string_view sv{"24 abc "};
-  // if(auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result);
-  //     ec == std::errc())
-  //     std::cout << result << "\n" "p -> \"" << p << "\"\n";
-  // double pi = 3.141592;
-  // std::string_view pie = "3.141592";
-  // std::cout << "Pi is " << pi << '\n';
-  // double pi2 = 0;
-  // const auto format = std::chars_format::general;
-  // const auto res = std::from_chars(pie.begin(), pie.end(), pi2, format);
-  // std::cout << "Pi2 is " << pi2 << '\n';
-  // std::cout << "2 pi " << 2.0*pi2 << '\n';
+  std::array<char, 10> str{"42 xyz "};
+  int result;
+  if(auto [p, ec] = std::from_chars(str.data(), str.data()+str.size(), result);
+    ec == std::errc())
+    std::cout << result << "\n" "p -> \"" << p << "\"\n";
+  std::string_view sv{"24 abc "};
+  auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
+  ec == std::errc()
+    ? std::cout << "Couldn't convert value"
+    : std::cout << result << "\n" "p -> \"" << p << "\"\n";
+  double pi = 3.141592;
+  std::string_view pie = "3.141592";
+  std::cout << "Pi is " << pi << '\n';
+  //nb: to_chars/from_chars is implemented 
+  //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
+  //double pi2 = 0;
+  //[p, ec] = std::from_chars(pie.begin(), pie.end(), pi2, std::chars_format::general);
+  //ec == std::errc()
+  //  ? std::cout << "Couldn't convert value"
+  //  : std::cout << "Pi2 is " << pi2 << '\n';
+  //std::cout << "2 pi " << 2.0*pi2 << '\n';
+#endif
   return EXIT_SUCCESS;
 }
