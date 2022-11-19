@@ -367,10 +367,10 @@ int main(int argc,char* argv[])
     : std::cout << result << "\n" "p -> \"" << p << "\"\n";
   //nb: to_chars/from_chars is implemented before
   //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
-  //std::cout << "Visual Studio " << _MSC_VER << "\n";
+  //std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
   //std::cout << "gcc           " << __GNUC__ << "\n";
-  //std::cout << "clang         " << __clang__ << "\n";
-#if ((__GNUC__ >= 11)||(__clang__ >= 16)||(_MSC_VER >= 19))
+  //std::cout << "clang         " << __clang_major__ << "." << __clang_minor__ << "\n";
+#if ((__GNUC__ >= 11)||(__clang_major__ >= 16)||(_MSC_FULL_VER >= 1938))
   double pi = 3.141592;
   std::string_view pie = "3.141592";
   std::cout << "Pi is " << pi << '\n';
