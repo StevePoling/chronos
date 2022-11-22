@@ -16,5 +16,6 @@ out/*
 CTestTestfile.cmake
 chronos
 cmake_install.cmake
-
+a.out
+chronos.o*
 .fake

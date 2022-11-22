@@ -17,23 +17,15 @@
 #include <tuple>
 #include <vector>
 
-//#if __cplusplus >= ???
-//199711L (C++98 or C++03)
-//201103L (C++11)
-//201402L (C++14)
-//201703L (C++17)
-//clang-1200.0.32.29: 201707L (C++2a)
-//Apple clang version 12.0.5
-//202002L (C++20)
-
 using namespace std::chrono;
 using namespace std::literals;
 using Clock = std::chrono::system_clock;
 using TimePoint = std::chrono::time_point<std::chrono::system_clock>;
 using Duration = std::chrono::seconds;
 using D_Range = std::pair<Duration,Duration>;
-using ActivityList = std::vector<std::tuple<std::string, Duration>>;//, TimePoint, TimePoint>>;
+using ActivityList = std::vector<std::tuple<std::string, Duration>>;
 
+// MSVC wants "safe" function_s, but does not implement strptime 
 #ifdef _MSC_VER
 
 extern "C" char* strptime(const char* s,
@@ -64,7 +56,6 @@ int sscanf_s(const char* in,const char *format,int* h,int* m, int* s)
 std::string ToString( const TimePoint& time, const std::string& format)
 {
     const std::time_t tt = system_clock::to_time_t(time);
-    //std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
     std::tm tm({0});
     localtime_s(&tm,&tt); //Locale time-zone, usually UTC by default.
     std::stringstream ss;
@@ -75,8 +66,6 @@ std::string ToString( const TimePoint& time, const std::string& format)
 TimePoint TimeTomorrowAt(int hour, int min)
 {
   const time_t tt = system_clock::to_time_t(system_clock::now());
-
-  //std::tm tm = *std::localtime(&tt); //Locale time-zone, usually UTC by default.
   std::tm tm({0});
   ::localtime_s(&tm,&tt);
   tm.tm_sec = 0;
@@ -200,11 +189,6 @@ TimePoint TP_parse(const char* str)
   struct tm tm{0};
   strptime(str, "%I:%M%p", &tm);
   TimePoint result{std::chrono::system_clock::from_time_t(std::mktime(&tm))};
-  //if (result.time_since_epoch() < 0)
-  //{
-  //  std::chrono::time_point<std::chrono::system_clock,Duration>
-  //  result.time_since_epoch() += 1d;
-  //}
   return result;
 }
 void report_activity_list(const std::string& title, const TimePoint& deadline, const ActivityList& the_list)
@@ -285,12 +269,6 @@ int main(int argc,char* argv[])
   const auto latest_wake_up = now + sleep_time.second;
   const auto mins = std::chrono::duration_cast<std::chrono::minutes> (ideal_bedtime - now);
 
-// verify c++20 std::string::starts_with()
-//  std::cout << "C++ version ID " << __cplusplus << "\n";
-//  auto duh{"Hello World"s};
-//  std::cout << "Starts With? " << duh.starts_with("Hello") << "\n";
-//  std::cout << "Ends With? " << duh.ends_with("World") << "\n";
-
   std::cout << "Target wake: " << ToString(target_wake_up,"%I:%M%p")
     << " Bedtime: " << ToString(ideal_bedtime, "%I:%M%p")
     << " ("  << mins.count() << " minutes from now)\n";
@@ -352,7 +330,16 @@ int main(int argc,char* argv[])
   //   {"Find Pew", 15min},
   // };
   // report_activity_list("Church Starts"s, TimeTomorrowAt("11:00am"), church_list);
-#if 1
+
+  std::cout << "C++ version ID: " << __cplusplus << "\n";
+  //199711L (C++98 or C++03)
+  //201103L (C++11)
+  //201402L (C++14)
+  //201703L (C++17)
+  //202002L (C++20)
+  //202101L (C++2b)
+  auto const ufo = 1 <=> 2;
+  auto it = "thing"sv.starts_with("th") || "thing"sv.ends_with("th");
   // play with various data types vs std::from_chars()
   std::array<char, 10> str{"42 xyz "};
   int result;
@@ -384,7 +371,6 @@ int main(int argc,char* argv[])
   {
     std::cout << "Pi2 is " << pi2 << '\n';
   }
-#endif
 #endif
   return EXIT_SUCCESS;
 }
