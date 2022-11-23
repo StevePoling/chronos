@@ -37,3 +37,11 @@ ZERO_CHECK.vcxproj
 ZERO_CHECK.vcxproj.filters
 chronos.vcxproj
 chronos.vcxproj.filters
+.vs/*
+ALL_BUILD.vcxproj.user
+Debug/*
+chronos.dir/*
+chronos.sln
+chronos.vcxproj.user
+ttd.org
+x64/*
