@@ -15,7 +15,6 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
-      "miDebuggerPath": "/Users/steve/.vscode/extensions/ms-vscode.cpptools-1.12.4-darwin-x64/debugAdapters/lldb-mi/bin/lldb-mi",
       "preLaunchTask": "clang++ build active file"
     },
     {
@@ -29,7 +28,6 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",
       "preLaunchTask": "g++ build active file"
     },
   ]
