@@ -338,6 +338,8 @@ int main(int argc,char* argv[])
   //201703L (C++17)
   //202002L (C++20)
   //202101L (C++2b)
+  //202002L (C++latest /Zc:__cplusplus)
+#if __cplusplus > 202101L
   auto const ufo = 1 <=> 2;
   auto it = "thing"sv.starts_with("th") || "thing"sv.ends_with("th");
   // play with various data types vs std::from_chars()
@@ -347,6 +349,7 @@ int main(int argc,char* argv[])
   {
     std::cout << "Success: " << result << "\n" "p -> \"" << p << "\"\n";
   }
+
   std::string_view sv{"24 abc "};
   auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
   ec != std::errc()
@@ -357,7 +360,6 @@ int main(int argc,char* argv[])
   std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
   //std::cout << "gcc           " << __GNUC__ << "\n";
   //std::cout << "clang         " << __clang_major__ << "." << __clang_minor__ << "\n";
-#if ((__GNUC__ >= 11)||(__clang_major__ >= 16)||(_MSC_FULL_VER >= 1934))
   double pi = 3.141592;
   std::string_view pie = "3.141592";
   std::cout << "Pi is " << pi << '\n';

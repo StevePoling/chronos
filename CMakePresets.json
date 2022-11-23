@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 4,
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 23,
@@ -9,12 +9,11 @@
     {
       "name": "base",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_STANDARD": "20"
       }
     },
     {
-      "name": "Mac clang++",
+      "name": "x86-mac",
       "description": "Mac clang++",
       "inherits": "base",
       "cacheVariables": {
@@ -26,29 +25,25 @@
       "description": "Windows CL x86 arch, generators, build type",
       "inherits": "base",
       "architecture": {
-        "value": "x86",
-        "strategy": "external"
+        "value": "x64",
+        "strategy": "set"
       },
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl.exe"
       }
     },
     {
-      "name": "arm64-linux clang++",
-      "description": "Linux clang++ arm64 arch, generators, build type",
+      "name": "x86-linux",
+      "description": "Linux x86 arch, generators, build type",
       "inherits": "base",
-      "architecture": {
-        "value": "Unix Makefiles",
-        "strategy": "set"
-      },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_COMPILER": "/usr/bin/clang++"
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
       }
     },
     {
-      "name": "x86-linux g++",
-      "description": "Linux g++ x86 arch, generators, build type",
+      "name": "arm64-linux",
+      "description": "Linux arm64 arch, generators, build type",
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -58,9 +53,8 @@
   ],
   "buildPresets": [
     {
-      "name": "Mac clang++",
-      "configurePreset": "Mac clang++",
-      "targets": [ "Debug", "Release" ],
+      "name": "x86-mac",
+      "configurePreset": "x86-mac",
       "environment": {
         "C_INCLUDE_PATH": "/opt/local/include",
         "CPLUS_INCLUDE_PATH": "/opt/local/include:/usr/local/Cellar/fmt/9.1.0/include:/usr/local/Cellar/python@3.9/3.9.1_3/Frameworks/Python.framework/Versions/3.9/include/python3.9:/Users/steve/Projects/boost_1_75_0:/Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include",
@@ -70,16 +64,34 @@
       }
     },
     {
-      "name": "x86-linux g++",
-	    "configurePreset": "x86-linux g++",
-	    "targets": [ "Debug", "Release" ],
+      "name": "x86-windows",
+      "configurePreset": "x86-windows",
+      "targets": [ "Debug", "Release" ],
+      "environment":{
+        "CPPFLAGS": "/std=c++latest /Zc:__cplusplus"
+      }
+    },
+    {
+      "name": "x86-linux",
+	    "configurePreset": "x86-linux",
 	    "environment": {
 	      "C_INCLUDE_PATH": "/usr/local/include",
         "CPLUS_INCLUDE_PATH": "/usr/local/include:/usr/local/include/boost",
         "CPPFLAGS": "-I/usr/local/include",
         "LIBRARY_PATH": "/usr/local/lib",
         "LDFLAGS": "-L/usr/local/lib"
-	    }
+      }
+    },
+    {
+      "name": "arm64-linux",
+      "configurePreset": "arm64-linux",
+      "environment": {
+        "C_INCLUDE_PATH": "/usr/local/include",
+        "CPLUS_INCLUDE_PATH": "/usr/local/include:/usr/local/include/boost",
+        "CPPFLAGS": "-I/usr/local/include",
+        "LIBRARY_PATH": "/usr/local/lib",
+        "LDFLAGS": "-L/usr/local/lib"
+      }
     }
   ]
 }
