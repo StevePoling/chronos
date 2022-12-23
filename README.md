@@ -1,10 +1,12 @@
-# Remember
+ # Remember
 
 When you do a Brew Upgrade, you may change versions of cmake, and/or the MaxOSX sdk
 ```
 cmake  ⇒ ../Cellar/cmake/3.24.2/bin/cmake
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk
 ```
+
+It'll cause make to fail saying it can't find the old version of cmake.
 
 You'll thus want to run this command: 
 
