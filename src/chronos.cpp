@@ -184,13 +184,27 @@ std::string PadRight( std::string msg, size_t length)
 
 // TimePoint is only meaningful in the context of a clock
 // and there's no "standard" clock
-TimePoint TP_parse(const char* str)
+std::optional<TimePoint> TP_parse(const char* str)
 {
-  struct tm tm{0};
-  strptime(str, "%I:%M%p", &tm);
-  TimePoint result{std::chrono::system_clock::from_time_t(std::mktime(&tm))};
+  std::optional<TimePoint> result;
+  std::tm tm{0}, tm0{};
+  tm.tm_year = 2020-1900; // 2020
+  tm.tm_mon  = 2-1;       // February
+  tm.tm_mday = 15;        // 15th
+  if (strptime(str, "%I:%M%p", &tm) != nullptr)
+  {
+    tm.tm_hour = tm0.tm_hour;
+    tm.tm_min = tm0.tm_min;
+    tm.tm_sec = tm0.tm_sec;
+    auto temptime = std::mktime(&tm);
+    if (temptime != -1)
+    {
+      result = TimePoint{std::chrono::system_clock::from_time_t(temptime)};
+    }
+  }
   return result;
 }
+
 void report_activity_list(const std::string& title, const TimePoint& deadline, const ActivityList& the_list)
 {
   size_t longest_message{0};
