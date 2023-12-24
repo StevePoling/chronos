@@ -31,3 +31,9 @@ Edit launch.json to add
 ```json
 "miDebuggerPath": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/lldb-mi"
 ```
+
+## Platform Dependencies
+
+MacOS security makes gdb almost unusable. At least, I haven't figured out how. Thus when you want to debug on a Mac, always use lldb. Use gdb on Linux.
+
+TODO: Windows probably should use lldb.exe, too.
