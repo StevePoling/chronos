@@ -43,6 +43,8 @@ Debug/*
 chronos.dir/*
 chronos.sln
 chronos.vcxproj.user
+chronos.exe
+vc140.pdb
 ttd.org
 x64/*
 targets.log
