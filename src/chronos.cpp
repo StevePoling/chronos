@@ -328,22 +328,22 @@ int main(int argc,char* argv[])
     {"Make coffee"s, 10min},
     {"Get dressed"s, 10min},
     {"Get checklist items"s, 5min},
-    {"Drive to race"s, drive_time},//10min
+    {"Drive to race"s, drive_time},
     {"Park near race"s, 5min},
     {"Pick up packet"s, 10min},
     {"Find Bathroom & Starting Line"s, 20min},
   };
   report_race(race_name, race_address, race_start, race_list);
 
-  // const ActivityList church_list {
-  //   {"Go to sleep"s, 9h},
-  //   {"Wake up"s, 5min},
-  //   {"Shower"s, 20min},
-  //   {"Get dressed"s, 10min},
-  //   {"Walk to church", 35min},
-  //   {"Find Pew", 15min},
-  // };
-  // report_activity_list("Church Starts"s, TimeTomorrowAt("11:00am"), church_list);
+  const ActivityList church_list {
+    {"Go to sleep"s, 9h},
+    {"Wake up"s, 5min},
+    {"Shower"s, 20min},
+    {"Get dressed"s, 10min},
+    {"Walk to church", 35min},
+    {"Find Pew", 15min},
+  };
+  report_activity_list("Sunday School Starts"s, TimeTomorrowAt("9:45am"), church_list);
 
   std::cout << "C++ version ID: " << __cplusplus << "\n";
   //199711L (C++98 or C++03)
