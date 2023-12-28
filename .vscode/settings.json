@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "__errc": "cpp",
+    "charconv": "cpp"
+  }
+}

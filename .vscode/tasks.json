@@ -23,7 +23,7 @@
       "label": "clang++ build active file",
       "command": "clang++",
       "args": [
-        "-std=c++20",
+        "-std=c++23",
         "-g",
         "${file}",
         "-o",

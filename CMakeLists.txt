@@ -10,8 +10,8 @@ include(CTest)
 enable_testing()
 
 add_executable(chronos src/chronos.cpp)
-set_property(TARGET chronos PROPERTY CXX_STANDARD 20)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET chronos PROPERTY CXX_STANDARD 23)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 23)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

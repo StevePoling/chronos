@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <array>
 #include <assert.h>
+#include <cassert>
 #include <charconv>
 #include <chrono>
 #include <compare>
@@ -12,6 +13,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <system_error>
 #include <time.h>
 #include <type_traits>
 #include <tuple>
@@ -353,9 +355,30 @@ int main(int argc,char* argv[])
   //202002L (C++20)
   //202101L (C++2b)
   //202002L (C++latest /Zc:__cplusplus)
-#if __cplusplus > 202101L
+  //202302L (C++23)
+
+  //nb: to_chars/from_chars is implemented before
+  //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
+#ifdef _MSC_FULL_VER
+  std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
+#endif
+#ifdef __GNUC__
+  std::cout << "__GNUC__           " << __GNUC__ << "\n";
+#endif
+#if defined(__clang_major__) && defined(__clang_minor__)
+  std::cout << "clang         " << __clang_major__ << "." << __clang_minor__ << "\n";
+#endif
+
+#if __cplusplus > 202002L
   auto const ufo = 1 <=> 2;
   auto it = "thing"sv.starts_with("th") || "thing"sv.ends_with("th");
+  const auto haystack = std::string("haystack with needles");
+  const auto needle = std::string("needle");
+  if (haystack.contains(needle))
+  {
+    std::cout << "bazinga\n";
+  }
+
   // play with various data types vs std::from_chars()
   std::array<char, 10> str{"42 xyz "};
   int result;
@@ -363,21 +386,25 @@ int main(int argc,char* argv[])
   {
     std::cout << "Success: " << result << "\n" "p -> \"" << p << "\"\n";
   }
-
+  //nb: to_chars/from_chars is implemented before
+  //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
+#ifdef _MSC_FULL_VER
+  std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
+#endif
+#ifdef __cpp_lib_to_chars  
+  std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
   std::string_view sv{"24 abc "};
   auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
   ec != std::errc()
     ? std::cout << "Couldn't convert value\n"
     : std::cout << result << "\n" "p -> \"" << p << "\"\n";
-  //nb: to_chars/from_chars is implemented before
-  //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
-  std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
-  //std::cout << "gcc           " << __GNUC__ << "\n";
-  //std::cout << "clang         " << __clang_major__ << "." << __clang_minor__ << "\n";
+
+  //c++23: convert string "3.141592" to double 3.141592 using std::from_chars
   double pi = 3.141592;
   std::string_view pie = "3.141592";
   std::cout << "Pi is " << pi << '\n';
   double pi2 = 0;
+  int pi_int = 0;
   const auto [p2, ec2] = std::from_chars(pie.begin(), pie.end(), pi2, std::chars_format::general);
   if (ec2 != std::errc())
   {
@@ -387,6 +414,7 @@ int main(int argc,char* argv[])
   {
     std::cout << "Pi2 is " << pi2 << '\n';
   }
+#endif
 #endif
   return EXIT_SUCCESS;
 }
