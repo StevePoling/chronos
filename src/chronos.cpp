@@ -391,7 +391,8 @@ int main(int argc,char* argv[])
 #ifdef _MSC_FULL_VER
   std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
 #endif
-#ifdef __cpp_lib_to_chars  
+//this seems to be ok for just g++
+#ifdef 0//__cpp_lib_to_chars  
   std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
   std::string_view sv{"24 abc "};
   auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
