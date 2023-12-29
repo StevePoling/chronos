@@ -9,7 +9,7 @@
     {
       "name": "base",
       "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "20"
+        "CMAKE_CXX_STANDARD": "23"
       }
     },
     {
@@ -29,7 +29,8 @@
         "strategy": "set"
       },
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "cl.exe"
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_CXX_STANDARD": "23"
       }
     },
     {
@@ -66,9 +67,9 @@
     {
       "name": "x86-windows",
       "configurePreset": "x86-windows",
-      "targets": [ "Debug", "Release" ],
+      "targets": [ "ALL_BUILD" ],
       "environment":{
-        "CPPFLAGS": "/std=c++latest /Zc:__cplusplus"
+        "CPPFLAGS": "/std=c++23 /Zc:__cplusplus"
       }
     },
     {

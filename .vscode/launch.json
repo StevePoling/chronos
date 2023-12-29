@@ -5,12 +5,12 @@
       "name": "(Windows) Launch",
       "type": "cppvsdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/src/chronos.exe",
+      "program": "${workspaceFolder}/out/build/x86-windows/Debug/chronos.exe",
       "args": ["(windoze) Turkey Trot 5K","Van Andel Arena / 130 Fulton Street / Grand Rapids, MI 49503","30min","8:30am"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
-      "console": "externalTerminal"
+      "console": "integratedTerminal",
     },
     {
       "name": "(lldb) Launch",

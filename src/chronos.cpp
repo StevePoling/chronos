@@ -386,13 +386,8 @@ int main(int argc,char* argv[])
   {
     std::cout << "Success: " << result << "\n" "p -> \"" << p << "\"\n";
   }
-  //nb: to_chars/from_chars is implemented before
-  //GCC libstdc++ 13, Clang libc++ 16, MSVC STL 19.34
-#ifdef _MSC_FULL_VER
-  std::cout << "Visual Studio " << _MSC_FULL_VER << "\n";
-#endif
 //this seems to be ok for just g++
-#ifdef 0//__cpp_lib_to_chars  
+#if !defined (_MSC_FULL_VER)
   std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
   std::string_view sv{"24 abc "};
   auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
