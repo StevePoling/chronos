@@ -369,48 +369,39 @@ int main(int argc,char* argv[])
   std::cout << "clang         " << __clang_major__ << "." << __clang_minor__ << "\n";
 #endif
 
-#if __cplusplus > 202002L
   auto const ufo = 1 <=> 2;
   auto it = "thing"sv.starts_with("th") || "thing"sv.ends_with("th");
   const auto haystack = std::string("haystack with needles");
   const auto needle = std::string("needle");
   if (haystack.contains(needle))
   {
-    std::cout << "bazinga\n";
+    std::cout << "std:string contains() works\n";
   }
-
   // play with various data types vs std::from_chars()
   std::array<char, 10> str{"42 xyz "};
-  int result;
+  int result{0};
   if(auto [p, ec] = std::from_chars(str.data(), str.data()+str.size(), result); ec == std::errc())
   {
-    std::cout << "Success: " << result << "\n" "p -> \"" << p << "\"\n";
+    std::cout << "Simple from_chars works: " << result << "\n" "p -> \"" << p << "\"\n";
   }
-//this seems to be ok for just g++
-#if !defined (_MSC_FULL_VER)
   std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
-  std::string_view sv{"24 abc "};
-  auto [p, ec] = std::from_chars(sv.begin(), sv.end(), result); 
+
+  auto sv{"24 abc "sv};
+  auto [p, ec] = std::from_chars(&*sv.begin(), &*sv.end(), result); 
   ec != std::errc()
     ? std::cout << "Couldn't convert value\n"
-    : std::cout << result << "\n" "p -> \"" << p << "\"\n";
+    : std::cout << result << "\nstd::from_chars handles string_view\n" "p -> \"" << p << "\"\n";
 
   //c++23: convert string "3.141592" to double 3.141592 using std::from_chars
   double pi = 3.141592;
-  std::string_view pie = "3.141592";
+  auto pie = "3.141592"sv;
   std::cout << "Pi is " << pi << '\n';
   double pi2 = 0;
   int pi_int = 0;
-  const auto [p2, ec2] = std::from_chars(pie.begin(), pie.end(), pi2, std::chars_format::general);
+  const auto [p2, ec2] = std::from_chars(&*pie.begin(), &*pie.end(), pi2, std::chars_format::general);
   if (ec2 != std::errc())
-  {
     std::cout << "Couldn't convert value\n";
-  }
   else
-  {
-    std::cout << "Pi2 is " << pi2 << '\n';
-  }
-#endif
-#endif
+    std::cout << pie << "\nPi2 is " << pi2 << '\n';
   return EXIT_SUCCESS;
 }
