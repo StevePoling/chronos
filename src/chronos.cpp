@@ -384,13 +384,17 @@ int main(int argc,char* argv[])
   {
     std::cout << "Simple from_chars works: " << result << "\n" "p -> \"" << p << "\"\n";
   }
-  std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
 
   auto sv{"24 abc "sv};
   auto [p, ec] = std::from_chars(&*sv.begin(), &*sv.end(), result); 
   ec != std::errc()
     ? std::cout << "Couldn't convert value\n"
     : std::cout << result << "\nstd::from_chars handles string_view\n" "p -> \"" << p << "\"\n";
+
+#if !defined(__cpp_lib_to_chars)
+  std::cout << "__cpp_lib_to_chars is undefined\n";
+#else
+  std::cout << "__cpp_lib_to_chars " << __cpp_lib_to_chars << "\n";
 
   //c++23: convert string "3.141592" to double 3.141592 using std::from_chars
   double pi = 3.141592;
@@ -403,5 +407,7 @@ int main(int argc,char* argv[])
     std::cout << "Couldn't convert value\n";
   else
     std::cout << pie << "\nPi2 is " << pi2 << '\n';
+#endif
+
   return EXIT_SUCCESS;
 }

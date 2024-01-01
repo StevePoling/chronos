@@ -19,7 +19,7 @@
       "program": "${fileDirname}/chronos",
       "args": ["(lldb) Turkey Trot 5K","Van Andel Arena / 130 Fulton Street / Grand Rapids, MI 49503","30min","8:30am"],
       "stopAtEntry": false,
-      "cwd": "${fileDirname}",
+      "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
       "MIMode": "lldb",
