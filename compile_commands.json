@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/steve/Projects/chronos",
+  "command": "/usr/bin/c++   -std=gnu++23 -o CMakeFiles/chronos.dir/src/chronos.cpp.o -c /home/steve/Projects/chronos/src/chronos.cpp",
+  "file": "/home/steve/Projects/chronos/src/chronos.cpp",
+  "output": "CMakeFiles/chronos.dir/src/chronos.cpp.o"
+}
+]
